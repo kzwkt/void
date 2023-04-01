@@ -1,0 +1,1 @@
+doas chronyd -q 'server 0.europe.pool.ntp.org iburst'

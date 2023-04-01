@@ -1,0 +1,11 @@
+ ##get emoji from https://raw.githubusercontent.com/Mange/rofi-emoji/master/all_emojis.txt
+ #!/bin/sh
+
+chosen=$(cut -f 1,3,4,5  ~/.config/wemoji/all_emojis.txt |wofi --dmenu -w 128  -l 23 | cut -f1 )
+[ -z "$chosen" ] && exit
+
+if [ -n "$1" ]; then
+    wtype "$chosen"
+else
+    printf "$chosen" | wl-copy
+fi

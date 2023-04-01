@@ -1,0 +1,10 @@
+#!/bin/sh
+
+export NNN_PLUG='e:-!doas nano "$nnn"*;x:-!doas rm -r "$nnn"*'                      
+export NNN_OPTS="r"                                                                                
+export NNN_OPENER=~/.bin/nuke                                                                 
+export NNN_FIFO=/tmp/nnn.fifo
+alias cpg=~/.bin/cpg
+alias mvg=~/.bin/mvg
+
+$HOME/.bin/N  "$@"

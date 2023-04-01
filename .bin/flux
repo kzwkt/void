@@ -1,0 +1,5 @@
+if pgrep wlsunset ; then
+pkill wlsunset 
+else 
+wlsunset -l 26.6 -L 87.9 
+fi

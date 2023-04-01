@@ -1,0 +1,1 @@
+/sbin/wpa_supplicant -B -Dnl80211 -iwlan0 -c /home/kai/.wpa/config
