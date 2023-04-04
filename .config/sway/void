@@ -1,0 +1,227 @@
+set $mod Mod4
+set $mod1 Mod1
+
+set $left h
+set $down j
+set $up k
+set $right l
+
+set $r_vol exec  pkill -RTMIN+1 i3blocks
+
+set $term foot
+set $browser apulse ~/opt/firefox/firefox
+set $editor foot nano
+set $menu wofi --show drun -I
+
+set $mount exec doas ntfs-3g
+set $umount exec doas umount
+
+set $mode_fs_mount  FS mount: l (Library), a (Apps), p (phone), r (realme phone)
+
+#seat seat0 xcursor_theme  rad
+#exec_always  gsettings set org.gnome.desktop.interface  cursor-theme  'rad'
+
+##autoruns
+exec  pipewire
+
+#output *  bg ~/wal/MotherAndFather.png fill
+swaybg_command -
+
+xwayland disable
+gaps inner 2
+gaps outer 2
+default_border pixel 5
+
+input type:touchpad {
+dwt enabled
+tap enabled
+middle_emulation enabled
+middle_emulation enabled
+pointer_accel 1
+}
+
+input * {
+xkb_layout "us,np"
+xkb_options "grp:shifts_toggle"
+xkb_numlock enable
+}
+
+
+#wm rules
+#for_window [window_role=pop-up|task_dialog|About|Preferences] floating enable
+#for_window [class=xdman-Main] floating enable
+for_window [app_id= mpv|imv|pavucontrol] floating enable
+for_window [urgent=latest] focus
+for_window [title = "Picture-in-Picture"] sticky enable ; floating enable;
+for_window [title= "mvi"] floating disable ;
+
+
+assign [app_id="Alacritty"] 1
+assign [app_id="firefox"] 2
+assign [app_id="pcmanfm"]  3
+assign [app_id="geany"] 4
+assign [app_id="mpv"] 5
+assign [app_id=org.pwmt.zathura,gimp] 6
+
+#key bindings
+bindsym $mod1+Tab workspace next 
+
+
+bindsym $mod+slash exec wmoji type
+bindsym $mod+e exec foot ~/.bin/fm
+
+bindsym $mod+Return exec $term ; split toggle;
+bindsym $mod+w exec $browser
+bindsym $mod+q kill
+bindsym $mod+d exec $menu
+floating_modifier $mod normal
+bindsym $mod+Shift+r reload
+bindsym $mod+Shift+e exec swaynag -t warning -m 'Bye Bye' -B 'Yes' 'swaymsg exit'
+
+
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+# Move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+bindsym $mod+b splith
+bindsym $mod+v splitv
+
+
+bindsym  XF86PowerOff output eDP-1 dpms toggle
+
+
+bindsym --border  button3 floating toggle
+bindsym --border  button2 kill
+bindsym button6 move left
+bindsym button7 move right
+
+
+bindsym $mod1+s layout stacking
+bindsym $mod1+w layout tabbed
+bindsym $mod1+e layout toggle split
+
+bindsym $mod+f fullscreen
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+bindsym $mod+a focus parent
+
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+bindsym $mod+r mode "resize"
+
+bindsym XF86AudioRaiseVolume exec wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+ ; $r_vol
+bindsym XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-  ; $r_vol
+bindsym XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle  ; $r_vol
+
+bindsym Control+XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-  ; $r_vol
+bindsym Control+XF86AudioRaiseVolume exec  wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SOURCE@ 5%+  ; $r_vol
+bindsym Control+XF86AudioMUTE exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle  ; $r_vol
+
+
+bindsym XF86MonBrightnessDown exec  brightnessctl -e set 5%-
+bindsym XF86MonBrightnessUp exec   brightnessctl -e set 5%+
+
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+bindsym Print exec ~/.bin/wshot
+bindsym $mod+i exec $editor ~/.config/sway/config
+bindsym $mod+Shift+i exec $editor  ~/.config/i3blocks/config
+
+
+
+bindsym $mod+m       mode "$mode_fs_mount"
+bindsym $mod+Shift+m  exec ~/.bin/wum
+
+mode "$mode_fs_mount" {
+bindsym a       $mount /dev/sda1 ~/mnt/aps,    mode "default"
+bindsym p       $mount /dev/sda4 ~/mnt/win,    mode "default" 
+bindsym m       $mount /dev/sda3 ~/mnt/med,    mode "default"
+bindsym l       $mount /dev/sda5 ~/mnt/lib,    mode "default"
+bindsym r exec simple-mtpfs --device 1 ~/mnt/oppo, mode "default"
+bindsym Escape mode "default"
+}
+
+
+set $mode_system System: (l) lock, (e) exit, (s) suspend, (h) hibernate, (r) reboot, (o) power-off
+bindsym $mod+Escape mode "$mode_system"
+
+mode "$mode_system" {
+bindsym l exec swaylock, mode "default"
+bindsym e exit
+bindsym s exec swaylock && systemctl suspend , mode "default"
+bindsym h exec swaylock && systemctl hibernate, mode "default"
+bindsym r exec doas reboot
+bindsym o exec doas poweroff
+bindsym Escape mode "default"
+}
+
+
+mode "resize" {
+bindsym $left resize shrink width 10px
+bindsym $down resize grow height 10px
+bindsym $up resize shrink height 10px
+bindsym $right resize grow width 10px
+
+bindsym Left resize shrink width 10px
+bindsym Down resize grow height 10px
+bindsym Up resize shrink height 10px
+bindsym Right resize grow width 10px
+
+# Return to default mode
+bindsym Return mode "default"
+bindsym Escape mode "default"
+}
+
+bar {
+position top
+#mode hide
+status_command i3blocks
+#swaybar_command waybar
+}
+
+include /etc/sway/config.d/*
+
+
+
