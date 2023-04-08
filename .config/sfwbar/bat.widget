@@ -28,7 +28,7 @@ layout {
     style = If($BatState="","hidden","module")
     tooltip = Str(100*BatLeft/BatTotal,0) + "%" + BatState
     value = BatIcon
-    action = "wpwrmenu
+    action = "wpwrmenu"
     action[0] = wpwrmenu
     css = "* { min-height: 24px; min-width: 24px; padding: 4px; }"
 }
