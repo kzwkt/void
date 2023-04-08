@@ -1,6 +1,5 @@
 scanner {
-  ExecClient("amixer sevents Master","alsa") {} # declare alsa trigger
-  Exec("amixer sget Master") {
+  Exec("amixer get Master") {
     AlsaVolume = RegEx(".*[[](.[0-9]+)%")
     AlsaMuted = RegEx(".*[[].*[[]([A-Za-z].*)[]]")
   }
