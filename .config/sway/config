@@ -1,4 +1,5 @@
-# set variables
+include /etc/sway/config.d/*
+
 set {
 $mod Mod4
 $mod1 Mod1
@@ -8,81 +9,111 @@ $down j
 $up k
 $right l
 
+$background #282828
+$text #ffffff
+$focus #458588
+
 $r_vol exec  pkill -RTMIN+1 i3blocks
 $r_bl exec pkill -RTMIN+2 i3blocks
+$r_kb exec pkill -RTMIN+3 i3blocks
 
 $term foot
-$browser apulse ~/opt/firefox/firefox
-$editor foot nano
+$browser firefox
+$editor l3afpad
 $menu wofi --show drun -I
-
-$mount exec doas ntfs-3g
-$umount exec doas umount
-
-$mode_fs_mount  FS mount: l (Library), a (Apps), p (phone), r (realme phone)
+$pctl playerctl.sh
+$systemctl loginctl
 $mode_system System: (l) lock, (e) exit, (s) suspend, (h) hibernate, (r) reboot, (o) power-off
+
+$ws1 1  Term
+$ws2 2  Webb
+$ws3 3  File
+$ws4 4  Code
+$ws5 5  Medi
+$ws6 6  Grap
+$ws7 7  Othe
 }
 
-seat seat0 xcursor_theme  rad
-#output *  bg ~/wal/MotherAndFather.png fill
+##autoruns
+#exec_always  gsettings set org.gnome.desktop.interface  cursor-theme  'rad'
+#exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 
+exec pipewire-launcher
+
+
+#seat seat0 xcursor_theme  rad
+#output *  bg "$wallpaper" fill
+#xwayland disable
+
 swaybg_command -
-xwayland disable
-gaps inner 2
-gaps outer 2
-default_border pixel 5
+
+default_border pixel 2
 floating_modifier $mod normal
+focus_follows_mouse no 
+default_floating_border normal
+workspace_auto_back_and_forth yes
+floating_maximum_size 1920 x 1080
+smart_borders on 
+smart_gaps on
+font monospace 12
+
+
+# client.<class> <border> <background> <text> <indicator> <child_border>
+client.focused    #ff0000 #ff0000      #ffffff #4477ff     #ff0000
 
 #wm rules
-#for_window [window_role=pop-up|task_dialog|About|Preferences] floating enable
-#for_window [class=xdman-Main] floating enable
-
 for_window {
-[app_id= mpv|imv|pavucontrol] floating enable
+[app_id=.*] focus ; border csd
+[app_id=dragon-drop] sticky enable ; floating enable
+[app_id= mpv|float|xdm-app] floating enable ; border normal  
 [title = "Picture-in-Picture"] sticky enable ; floating enable;
-[urgent=latest] focus
 [title= "mvi"] floating disable ;
+[shell="xwayland"] title_format "[XWayland] %title"
 }
 
 assign {
-[app_id="Alacritty"] 1
-[app_id="firefox"] 2
-[app_id="pcmanfm"]  3
-[app_id="geany"] 4
-[app_id="mpv"] 5
-[app_id=org.pwmt.zathura,gimp] 6
+[app_id="foot"]  $ws1
+[app_id="firefox"]  $ws2
+[app_id="nnn"]   $ws3
+[app_id="geany"]  $ws4
+[app_id="mpv-s"]  $ws5
+[app_id=org.pwmt.zathura]  $ws6
+[class=gimp] $ws6
+[app_id=xdm-app] $ws7
 }
 
 # keyboard bindings
-bindsym {
+bindsym --to-code {
 $mod+a focus parent
 $mod+b splith
 $mod+d exec $menu
-$mod+e exec foot ~/.bin/fm
+$mod+e exec foot -a nnn fm
 $mod+Shift+e exec swaynag -t warning -m 'Bye Bye' -B 'Yes' 'swaymsg exit'
 $mod+f fullscreen
 $mod+i exec $editor ~/.config/sway/config
 $mod+Shift+i exec $editor  ~/.config/i3blocks/config
-$mod+m       mode "$mode_fs_mount"
-$mod+Shift+m  exec ~/.bin/wum
+$mod+m  exec mounter
+$mod+Shift+m  exec wum
 $mod+q kill
 $mod+Shift+r reload
 $mod+s sticky toggle
 $mod+v splitv
 $mod+w exec $browser
-
+$mod+x exec tt
 $mod+Escape mode "$mode_system"
 $mod+minus scratchpad show
 $mod+Shift+minus move scratchpad
-$mod+Return exec $term ; split toggle;
+$mod+z exec $term
+$mod1+z exec foot -a float
 $mod+slash exec wmoji type
-$mod+space focus mode_toggle
-$mod+Shift+space floating toggle
+$mod+Shift+Space floating toggle
+$mod+Space input 1:1:AT_Translated_Set_2_keyboard xkb_switch_layout next ;  $r_kb
 
 $mod1+e layout toggle split
 $mod1+s layout stacking
 $mod1+w layout tabbed
 $mod1+Tab workspace next 
 
+$mod1+space focus mode_toggle
 $mod+$left focus left
 $mod+$down focus down
 $mod+$up focus up
@@ -103,7 +134,7 @@ $mod+Shift+Down move down
 $mod+Shift+Up move up
 $mod+Shift+Right move right
 
-$mod1+$left resize shrink width 10px
+mod1+$left resize shrink width 10px
 $mod1+$down resize grow height 10px
 $mod1+$up resize shrink height 10px
 $mod1+$right resize grow width 10px
@@ -113,68 +144,74 @@ $mod1+Down resize grow height 10px
 $mod1+Up resize shrink height 10px
 $mod1+Right resize grow width 10px
 
-$mod+1 workspace number 1
-$mod+2 workspace number 2
-$mod+3 workspace number 3
-$mod+4 workspace number 4
-$mod+5 workspace number 5
-$mod+6 workspace number 6
-$mod+7 workspace number 7
+$mod+1 workspace $ws1 
+$mod+2 workspace $ws2 
+$mod+3 workspace $ws3
+$mod+4 workspace $ws4
+$mod+5 workspace $ws5
+$mod+6 workspace $ws6
+$mod+7 workspace $ws7
 $mod+8 workspace number 8
 $mod+9 workspace number 9
 $mod+0 workspace number 10
 
-$mod+Shift+1 move container to workspace number 1
-$mod+Shift+2 move container to workspace number 2
-$mod+Shift+3 move container to workspace number 3
-$mod+Shift+4 move container to workspace number 4
-$mod+Shift+6 move container to workspace number 6
-$mod+Shift+7 move container to workspace number 7
+$mod+Shift+1 move container to workspace  $ws1
+$mod+Shift+2 move container to workspace  $ws2
+$mod+Shift+3 move container to workspace  $ws3
+$mod+Shift+4 move container to workspace  $ws4
+$mod+Shift+6 move container to workspace  $ws6
+$mod+Shift+7 move container to workspace  $ws7
 $mod+Shift+8 move container to workspace number 8
 $mod+Shift+9 move container to workspace number 9
 $mod+Shift+0 move container to workspace number 10
 
-XF86AudioRaiseVolume exec amixer sset Master 2%+ && $r_vol
-XF86AudioLowerVolume exec amixer sset Master 2%- && $r_vol
-XF86AudioMute exec amixer sset Master toggle  && $r_vol
+XF86AudioRaiseVolume exec wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+ ; $r_vol
+XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-  ; $r_vol
+XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle  ; $r_vol
 
-Control+XF86AudioMute exec amixer -q sset Capture toggle 
-Control+XF86AudioRaiseVolume exec amixer -q sset Capture 5%+
-Control+XF86AudioLowerVolume exec amixer -q sset Capture 5%- 
+Control+XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-  ; $r_vol
+Control+XF86AudioRaiseVolume exec  wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SOURCE@ 5%+  ; $r_vol
+Control+XF86AudioMUTE exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle  ; $r_vol
 
-XF86MonBrightnessDown exec  light -U 2 && $r_bl
-XF86MonBrightnessUp exec light -A 2 && $r_bl
+XF86MonBrightnessDown exec  brightnessctl -e set 5%- ; $r_bl 
+XF86MonBrightnessUp exec   brightnessctl -e set 5%+ ; $r_bl
 
-XF86AudioPlay exec playerctl play-pause
-XF86AudioNext exec playerctl next
-XF86AudioPrev exec playerctl previous
-
-Print exec ~/.bin/wshot
+XF86AudioPlay exec $pctl play-pause
+$mod1+period exec $pctl next
+$mod1+comma exec $pctl previous
+$mod1+slash exec $pctl play-pause
+$mod+p exec wshot
+$mod+c exec prin
 XF86PowerOff output eDP-1 dpms toggle
 }
 
-# mouse binding
-bindsym --border  button3 floating toggle
-bindsym --border  button2 kill
-bindsym button6 move left
-bindsym button7 move right
+# Resize floating windows with mouse scroll:
+bindgesture swipe:3:up floating toggle
+bindgesture swipe:3:down  kill
+bindgesture swipe:3:left  move scratchpad
+bindgesture swipe:3:right  scratchpad show
+bindgesture hold:3 exec $menubindsym --whole-window --border {
+$mod+button4 resize shrink height 5 px or 5 ppt
+$mod+button5 resize grow height 5 px or 5 ppt
+$mod+button6 resize shrink width 5 px or 5 ppt
+$mod+button7 resize grow width 5 px or 5 ppt
+} 
 
-mode "$mode_fs_mount" {
-bindsym a       $mount /dev/sda1 ~/mnt/aps,    mode "default"
-bindsym p       $mount /dev/sda4 ~/mnt/win,    mode "default" 
-bindsym m       $mount /dev/sda3 ~/mnt/med,    mode "default"
-bindsym l       $mount /dev/sda5 ~/mnt/lib,    mode "default"
-bindsym r exec simple-mtpfs --device 1 ~/mnt/oppo, mode "default"
-bindsym Escape mode "default"
+bindgesture {
+swipe:3:up floating toggle
+swipe:3:down  kill
+swipe:3:left  move scratchpad
+swipe:3:right  scratchpad show
+hold:3 exec $menu
 }
 
 mode "$mode_system" {
 bindsym l exec swaylock, mode "default"
-bindsym e exit
-bindsym s exec swaylock &&  suspend , mode "default"
-bindsym h exec swaylock &&  hibernate, mode "default"
-bindsym r exec doas reboot
-bindsym o exec doas poweroff
+bindsym e exit , mode "default"
+bindsym s exec swaylock && $systemctl suspend , mode "default"
+bindsym h exec swaylock && $systemctl hibernate, mode "default"
+bindsym r exec $systemctl reboot , mode "default"
+bindsym o exec $systemctl poweroff , mode "default"
 bindsym Escape mode "default"
 }
 
@@ -182,23 +219,17 @@ input type:touchpad {
 dwt enabled
 tap enabled
 middle_emulation enabled
-middle_emulation enabled
 pointer_accel 1
 }
 
-input * {
+input 1:1:AT_Translated_Set_2_keyboard  {
 xkb_layout "us,np"
-xkb_options "grp:shifts_toggle"
 xkb_numlock enable
+xkb_options caps:backspace
 }
-
 
 bar {
 position top
-#mode hide
 status_command i3blocks
 }
 
-##autoruns
-#exec  pipewire
-#exec_always  gsettings set org.gnome.desktop.interface  cursor-theme  'rad'
