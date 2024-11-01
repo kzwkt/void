@@ -165,13 +165,13 @@ $mod+Shift+8 move container to workspace number 8
 $mod+Shift+9 move container to workspace number 9
 $mod+Shift+0 move container to workspace number 10
 
-XF86AudioRaiseVolume exec wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+ ; $r_vol
-XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-  ; $r_vol
-XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle  ; $r_vol
+XF86AudioRaiseVolume exec amixer sset Master 2%+ && $r_vol
+XF86AudioLowerVolume exec amixer sset Master 2%- && $r_vol
+XF86AudioMute exec amixer sset Master toggle  && $r_vol
 
-Control+XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-  ; $r_vol
-Control+XF86AudioRaiseVolume exec  wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SOURCE@ 5%+  ; $r_vol
-Control+XF86AudioMUTE exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle  ; $r_vol
+Control+XF86AudioMute exec amixer -q sset Capture toggle
+Control+XF86AudioRaiseVolume exec amixer -q sset Capture 5%+
+Control+XF86AudioLowerVolume exec amixer -q sset Capture 5%-
 
 XF86MonBrightnessDown exec  brightnessctl -e set 5%- ; $r_bl 
 XF86MonBrightnessUp exec   brightnessctl -e set 5%+ ; $r_bl
