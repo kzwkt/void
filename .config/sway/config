@@ -21,7 +21,7 @@ $term foot
 $browser firefox
 $editor l3afpad
 $menu wofi --show drun -I
-$pctl playerctl.sh
+$pctl playerctld.sh
 $systemctl loginctl
 $mode_system System: (l) lock, (e) exit, (s) suspend, (h) hibernate, (r) reboot, (o) power-off
 
