@@ -15,20 +15,15 @@ if [ -n "$ext" ]; then
 fi
 
 handle_pdf() {
+    if type zathura  >/dev/null 2>&1; then
             zathura "${FPATH}" >/dev/null 2>&1 &
+ fi
     exit 0
 }
 
-handle_audio() {
+handle_av() {
     if type mpv  >/dev/null 2>&1; then
         mpv --player-operation-mode=pseudo-gui  "${FPATH}" >/dev/null 2>&1 &
-    fi
-    exit 0
-}
-
-handle_video() {
-        if type mpv >/dev/null 2>&1; then
-           mpv --player-operation-mode=pseudo-gui "${FPATH}" >/dev/null 2>&1 &
     fi
     exit 0
 }
@@ -36,7 +31,21 @@ handle_video() {
 # handle this extension and exit
 handle_extension() {
     case "${ext}" in
-        ## Archive
+        ## PDF
+        pdf|epub)
+            handle_pdf
+            exit 1;;
+
+        ## Audio
+        aac|flac|m4a|mid|midi|mpa|mp2|mp3|ogg|wav|wma)
+            handle_av
+            exit 1;;
+
+        ## Video
+        avi|mkv|mp4|ts)
+            handle_av
+            exit 1;;
+ ## Archive
         a|ace|alz|arc|arj|bz|bz2|cab|cpio|deb|gz|jar|lha|lz|lzh|lzma|lzo|\
         rpm|rz|t7z|tar|tbz|tbz2|tgz|tlz|txz|tZ|tzo|war|xpi|xz|Z|zip)
             if type 7zz >/dev/null 2>&1; then
@@ -50,40 +59,13 @@ handle_extension() {
                 unrar lt -p- -- "${FPATH}" | eval "$PAGER"
             fi
             exit 1;;
-
-        ## PDF
-        pdf|epub)
-            handle_pdf
-            exit 1;;
-
-        ## Audio
-        aac|flac|m4a|mid|midi|mpa|mp2|mp3|ogg|wav|wma)
-            handle_audio
-            exit 1;;
-
-        ## Video
-        avi|mkv|mp4|ts)
-            handle_video
-            exit 1;;
-
-        ## Log files
-        log)
-            "$EDITOR" "${FPATH}"
-            exit 0;;
-
-# sets the variable abs_target, this should be faster than calling printf
-abspath() {
-    case "$1" in
-        /*) abs_target="$1";;
-        *)  abs_target="$PWD/$1";;
     esac
 }
 
-handle_multimedia() {
-        # local DEFAULT_SIZE="1920x1080"
-
+handle_mime() {
     mimetype="${1}"
     case "${mimetype}" in
+
         ## Image
         image/*)
                 if type mvi >/dev/null 2>&1; then
@@ -106,17 +88,6 @@ handle_multimedia() {
         video/*)
             handle_video
             exit 1;;
-    esac
-}
-
-handle_mime() {
-    mimetype="${1}"
-    case "${mimetype}" in
-
-        ## Manpages
-        text/troff)
-            man -l "${FPATH}"
-            exit 0;;
 
         ## Text
         text/* | */xml)
@@ -135,31 +106,11 @@ handle_fallback() {
     exit 1
 }
 
-handle_blocked() {
-    case "${MIMETYPE}" in
-        application/x-sharedlib)
-            exit 0;;
-
-        application/x-shared-library-la)
-            exit 0;;
-
-        application/x-executable)
-            exit 0;;
-
-        application/x-shellscript)
-            exit 0;;
-
-        application/octet-stream)
-            exit 0;;
-    esac
-}
 
 
 MIMETYPE="$(file -bL --mime-type -- "${FPATH}")"
 handle_extension
-handle_multimedia "${MIMETYPE}"
 handle_mime "${MIMETYPE}"
-handle_blocked "${MIMETYPE}"
 handle_fallback
 
 exit 1
