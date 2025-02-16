@@ -1,0 +1,4 @@
+export XKB_DEFAULT_LAYOUT=us,np
+export XKB_DEFAULT_OPTIONS=caps:backspace,grp:alt_shift_toggle
+export WLR_XWAYLAND=''
+dbus-run-session labwc
