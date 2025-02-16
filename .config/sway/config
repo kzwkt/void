@@ -1,5 +1,3 @@
-include /etc/sway/config.d/*
-
 set {
 	$mod Mod4
 	$mod1 Mod1
