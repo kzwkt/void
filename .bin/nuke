@@ -22,48 +22,20 @@ is_mac() {
 }
 
 handle_pdf() {
-    if [ "$GUI" -ne 0 ]; then
-        if type zathura >/dev/null 2>&1; then
-            nohup zathura "${FPATH}" >/dev/null 2>&1 &
-        else
-            return
-        fi
-    elif type mutool >/dev/null 2>&1; then
-        mutool draw -F txt -i -- "${FPATH}" 1-10 | eval "$PAGER"
-    elif type exiftool >/dev/null 2>&1; then
-        exiftool "${FPATH}" | eval "$PAGER"
-    else
-        return
-    fi
+            zathura "${FPATH}" >/dev/null 2>&1 &
     exit 0
 }
 
 handle_audio() {
     if type mpv  >/dev/null 2>&1; then
         mpv --player-operation-mode=pseudo-gui  "${FPATH}" >/dev/null 2>&1 &
-    elif type mediainfo >/dev/null 2>&1; then
-        mediainfo "${FPATH}" | eval "$PAGER"
-    elif type exiftool >/dev/null 2>&1; then
-        exiftool "${FPATH}"| eval "$PAGER"
-    else
-        return
     fi
     exit 0
 }
 
 handle_video() {
-    if [ "$GUI" -ne 0 ]; then
         if type mpv >/dev/null 2>&1; then
-            nohup mpv "${FPATH}" >/dev/null 2>&1 &
-        else
-            return
-        fi
-    elif type mediainfo >/dev/null 2>&1; then
-        mediainfo "${FPATH}" | eval "$PAGER"
-    elif type exiftool >/dev/null 2>&1; then
-        exiftool "${FPATH}"| eval "$PAGER"
-    else
-        return
+           mpv --player-operation-mode=pseudo-gui "${FPATH}" >/dev/null 2>&1 &
     fi
     exit 0
 }
@@ -74,11 +46,8 @@ handle_extension() {
         ## Archive
         a|ace|alz|arc|arj|bz|bz2|cab|cpio|deb|gz|jar|lha|lz|lzh|lzma|lzo|\
         rpm|rz|t7z|tar|tbz|tbz2|tgz|tlz|txz|tZ|tzo|war|xpi|xz|Z|zip)
-            if type atool >/dev/null 2>&1; then
-                atool --list -- "${FPATH}" | eval "$PAGER"
-                exit 0
-            elif type bsdtar >/dev/null 2>&1; then
-                bsdtar --list --file "${FPATH}" | eval "$PAGER"
+            if type 7zz >/dev/null 2>&1; then
+                7zz l -p -- "${FPATH}" | eval "$PAGER"
                 exit 0
             fi
             exit 1;;
@@ -88,16 +57,9 @@ handle_extension() {
                 unrar lt -p- -- "${FPATH}" | eval "$PAGER"
             fi
             exit 1;;
-        7z)
-            if type 7z >/dev/null 2>&1; then
-                ## Avoid password prompt by providing empty password
-                7z l -p -- "${FPATH}" | eval "$PAGER"
-                exit 0
-            fi
-            exit 1;;
 
         ## PDF
-        pdf)
+        pdf|epub)
             handle_pdf
             exit 1;;
 
@@ -115,65 +77,6 @@ handle_extension() {
         log)
             "$EDITOR" "${FPATH}"
             exit 0;;
-
-        ## BitTorrent
-        torrent)
-            if type rtorrent >/dev/null 2>&1; then
-                rtorrent "${FPATH}"
-                exit 0
-            elif type transmission-show >/dev/null 2>&1; then
-                transmission-show -- "${FPATH}"
-                exit 0
-            fi
-            exit 1;;
-
-        ## OpenDocument
-        odt|ods|odp|sxw)
-            if type odt2txt >/dev/null 2>&1; then
-                ## Preview as text conversion
-                odt2txt "${FPATH}" | eval "$PAGER"
-                exit 0
-            fi
-            exit 1;;
-
-        ## Markdown
-        md)
-            if type glow >/dev/null 2>&1; then
-                glow -sdark "${FPATH}" | eval "$PAGER"
-                exit 0
-            elif type lowdown >/dev/null 2>&1; then
-                lowdown -Tterm "${FPATH}" | eval "$PAGER"
-                exit 0
-            fi
-            ;;
-
-        ## HTML
-        htm|html|xhtml)
-            ## Preview as text conversion
-            if type w3m >/dev/null 2>&1; then
-                w3m -dump "${FPATH}" | eval "$PAGER"
-                exit 0
-            elif type lynx >/dev/null 2>&1; then
-                lynx -dump -- "${FPATH}" | eval "$PAGER"
-                exit 0
-            elif type elinks >/dev/null 2>&1; then
-                elinks -dump "${FPATH}" | eval "$PAGER"
-                exit 0
-            fi
-            ;;
-
-        ## JSON
-        json)
-            if type jq >/dev/null 2>&1; then
-                jq --color-output . "${FPATH}" | eval "$PAGER"
-                exit 0
-            elif type python >/dev/null 2>&1; then
-                python -m json.tool -- "${FPATH}" | eval "$PAGER"
-                exit 0
-            fi
-            ;;
-    esac
-}
 
 # sets the variable abs_target, this should be faster than calling printf
 abspath() {
@@ -209,11 +112,7 @@ load_dir() {
 }
 
 handle_multimedia() {
-    ## Size of the preview if there are multiple options or it has to be
-    ## rendered from vector graphics. If the conversion program allows
-    ## specifying only one dimension while keeping the aspect ratio, the width
-    ## will be used.
-    # local DEFAULT_SIZE="1920x1080"
+        # local DEFAULT_SIZE="1920x1080"
 
     mimetype="${1}"
     case "${mimetype}" in
@@ -224,7 +123,7 @@ handle_multimedia() {
                       mvi  "${FPATH}" >/dev/null 2>&1 &
                     exit 0
                 fi
-            fi
+	     fi
             exit 7;;
 
         ## PDF
@@ -241,36 +140,13 @@ handle_multimedia() {
         video/*)
             handle_video
             exit 1;;
-
-
-        
-        ## Font
-        # application/font*|application/*opentype)
-        #     preview_png="/tmp/$(basename "${IMAGE_CACHE_PATH%.*}").png"
-        #     if fontimage -o "${preview_png}" \
-        #                  --pixelsize "120" \
-        #                  --fontname \
-        #                  --pixelsize "80" \
-        #                  --text "  ABCDEFGHIJKLMNOPQRSTUVWXYZ  " \
-        #                  --text "  abcdefghijklmnopqrstuvwxyz  " \
-        #                  --text "  0123456789.:,;(*!?') ff fl fi ffi ffl  " \
-        #                  --text "  The quick brown fox jumps over the lazy dog.  " \
-        #                  "${FPATH}";
-        #     then
-        #         convert -- "${preview_png}" "${IMAGE_CACHE_PATH}" \
-        #             && rm "${preview_png}" \
-        #             && exit 6
-        #     else
-        #         exit 1
-        #     fi
-        #     ;;
-
     esac
 }
 
 handle_mime() {
     mimetype="${1}"
     case "${mimetype}" in
+
         ## Manpages
         text/troff)
             man -l "${FPATH}"
@@ -281,17 +157,6 @@ handle_mime() {
             "$EDITOR" "${FPATH}"
             exit 0;;
 
-        ## DjVu
-        image/vnd.djvu)
-            if type djvutxt >/dev/null 2>&1; then
-                ## Preview as text conversion (requires djvulibre)
-                djvutxt "${FPATH}" | eval "$PAGER"
-                exit 0
-            elif type exiftool >/dev/null 2>&1; then
-                exiftool "${FPATH}" | eval "$PAGER"
-                exit 0
-            fi
-            exit 1;;
     esac
 }
 
@@ -344,7 +209,7 @@ handle_bin() {
     esac
 }
 
-MIMETYPE="$( file -bL --mime-type -- "${FPATH}" )"
+MIMETYPE="$(file -bL --mime-type -- "${FPATH}")"
 handle_extension
 handle_multimedia "${MIMETYPE}"
 handle_mime "${MIMETYPE}"
