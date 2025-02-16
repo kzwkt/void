@@ -1,4 +1,6 @@
 export XKB_DEFAULT_LAYOUT=us,np
 export XKB_DEFAULT_OPTIONS=caps:backspace,grp:alt_shift_toggle
 export WLR_XWAYLAND=''
+XCURSOR_SIZE=24
+XCURSOR_THEME="Adwaita"
 dbus-run-session labwc
