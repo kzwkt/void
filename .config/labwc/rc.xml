@@ -20,7 +20,7 @@
 <keybind key="XF86_AudioMute"> <action name="Execute" command="amixer sset Master toggle"/> </keybind>
 <keybind key="XF86_MonBrightnessUp"> <action name="Execute" command="light -A 2%"/> </keybind>
 <keybind key="XF86_MonBrightnessDown"> <action name="Execute" command="light -U 2%"/> </keybind>
-<keybind key="XF86AudioPlay"> <action name="Execute" command="playerctl-dbus play-pause"/> </keybind>
+<keybind key="XF86AudioPlay"> <action name="Execute" command="playerctl.sh play-pause"/> </keybind>
 
 
 <keybind key="W-1">  <action name="GoToDesktop"> <to>1</to> </action>  </keybind>
