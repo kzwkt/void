@@ -1,28 +1,17 @@
 <?xml version="1.0"?>
 
-
 <labwc_config>
-
 <desktops number="4" />
 
 <keyboard>
 <default />
-<keybind key="W-z"> <action name="Execute" command="foot"/> </keybind>
 <keybind key="W-d"> <action name="Execute" command="wofi --show drun -I"/> </keybind>
 <keybind key="W-e"> <action name="Execute" command="foot fm"/>  </keybind>
 <keybind key="W-i"> <action name="Execute" command="foot nano  /home/k/.config/labwc/rc.xml"/>  </keybind>
 <keybind key="W-s-i"> <action name="Execute" command="foot nano  /home/k/.config/yabar/config.yml"/>  </keybind>
 <keybind key="W-q"> <action name="Close"/> </keybind>
-<keybind key="A-Space"> <action name="ShowMenu" menu="client-menu"/> </keybind>
-
-<keybind key="XF86_AudioLowerVolume">  <action name="Execute" command="amixer sset Master 5%-"/> </keybind>
-<keybind key="XF86_AudioRaiseVolume"> <action name="Execute" command="amixer sset Master 5%+"/> </keybind>
-<keybind key="XF86_AudioMute"> <action name="Execute" command="amixer sset Master toggle"/> </keybind>
-<keybind key="XF86_MonBrightnessUp"> <action name="Execute" command="light -A 2%"/> </keybind>
-<keybind key="XF86_MonBrightnessDown"> <action name="Execute" command="light -U 2%"/> </keybind>
-<keybind key="XF86AudioPlay"> <action name="Execute" command="playerctl.sh play-pause"/> </keybind>
-
-
+<keybind key="W-S-r"> <action name="Reconfigure"/> </keybind>
+<keybind key="W-z"> <action name="Execute" command="foot"/> </keybind>
 <keybind key="W-1">  <action name="GoToDesktop"> <to>1</to> </action>  </keybind>
 <keybind key="W-2"> <action name="GoToDesktop">  <to>2</to> </action> </keybind>
 <keybind key="W-3"> <action name="GoToDesktop">  <to>3</to>  </action> </keybind>
@@ -31,8 +20,14 @@
 <keybind key="W-S-at"> <action name="SendToDesktop">  <to>2</to> </action> </keybind>
 <keybind key="W-S-numbersign"> <action name="SendToDesktop">  <to>3</to> </action> </keybind>
 <keybind key="W-S-dollar"> <action name="SendToDesktop">  <to>4</to> </action> </keybind>
+<keybind key="A-Space"> <action name="ShowMenu" menu="client-menu"/> </keybind>
 
-<keybind key="W-S-r"> <action name="Reconfigure"/> </keybind>
+<keybind key="XF86_AudioLowerVolume">  <action name="Execute" command="amixer sset Master 5%-"/> </keybind>
+<keybind key="XF86_AudioRaiseVolume"> <action name="Execute" command="amixer sset Master 5%+"/> </keybind>
+<keybind key="XF86_AudioMute"> <action name="Execute" command="amixer sset Master toggle"/> </keybind>
+<keybind key="XF86_MonBrightnessUp"> <action name="Execute" command="light -A 2%"/> </keybind>
+<keybind key="XF86_MonBrightnessDown"> <action name="Execute" command="light -U 2%"/> </keybind>
+<keybind key="XF86AudioPlay"> <action name="Execute" command="playerctl.sh play-pause"/> </keybind>
 </keyboard>
 
 <mouse>
@@ -44,5 +39,4 @@
 <tap>yes</tap>
 </device>
 </libinput>
-
 </labwc_config>
