@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
-GUI="${GUI:-1}"
-BIN="${BIN:-0}"
 
 set -euf -o noclobber -o noglob -o nounset
 IFS="$(printf '%b_' '\n')"; IFS="${IFS%_}" # protect trailing \n
 
 PATH=$PATH:"${XDG_CONFIG_HOME:-$HOME/.config}/nnn/plugins"
-IMAGE_CACHE_PATH="$(dirname "$1")"/.thumbs
 
 FPATH="$1"
 FNAME=$(basename "$1")
@@ -16,10 +13,6 @@ ext="${FNAME##*.}"
 if [ -n "$ext" ]; then
     ext="$(printf "%s" "${ext}" | tr '[:upper:]' '[:lower:]')"
 fi
-
-is_mac() {
-    uname | grep -q "Darwin"
-}
 
 handle_pdf() {
             zathura "${FPATH}" >/dev/null 2>&1 &
@@ -86,31 +79,6 @@ abspath() {
     esac
 }
 
-# storing the result to a tmp file is faster than calling listimages twice
-listimages() {
-    find -L "///${1%/*}" -maxdepth 1 -type f -print0 |
-        grep -izZE '\.(jpe?g|png|gif|webp|tiff|bmp|ico|svg)$' |
-        sort -z | tee "$tmp"
-}
-
-load_dir() {
-    abspath "$2"
-    tmp="${TMPDIR:-/tmp}/nuke_$$"
-    trap 'rm -f $tmp' EXIT
-    count="$(listimages "$abs_target" | grep -a -m 1 -ZznF "$abs_target" | cut -d: -f1)"
-
-    if [ -n "$count" ]; then
-        if [ "$GUI" -ne 0 ]; then
-            xargs -0 nohup "$1" -n "$count" -- < "$tmp"
-        else
-            xargs -0 "$1" -n "$count" -- < "$tmp"
-        fi
-    else
-        shift
-        "$1" -- "$@" # fallback
-    fi
-}
-
 handle_multimedia() {
         # local DEFAULT_SIZE="1920x1080"
 
@@ -118,12 +86,10 @@ handle_multimedia() {
     case "${mimetype}" in
         ## Image
         image/*)
-            if [ "$GUI" -ne 0 ]; then
                 if type mvi >/dev/null 2>&1; then
                       mvi  "${FPATH}" >/dev/null 2>&1 &
                     exit 0
                 fi
-	     fi
             exit 7;;
 
         ## PDF
@@ -161,13 +127,10 @@ handle_mime() {
 }
 
 handle_fallback() {
-    if [ "$GUI" -ne 0 ]; then
         if type xdg-open >/dev/null 2>&1; then
             nohup xdg-open "${FPATH}" >/dev/null 2>&1 &
             exit 0
         fi
-    fi
-
     echo '----- File details -----' && file --dereference --brief -- "${FPATH}"
     exit 1
 }
@@ -191,29 +154,11 @@ handle_blocked() {
     esac
 }
 
-handle_bin() {
-    case "${MIMETYPE}" in
-        application/x-executable|application/x-shellscript)
-        clear
-        echo '-------- Executable File --------' && file --dereference --brief -- "${FPATH}"
-        printf "Run executable (y/N/'a'rgs)? "
-        read -r answer
-        case "$answer" in
-            [Yy]* ) exec "${FPATH}";;
-            [Aa]* )
-                printf "args: "
-                read -r args
-                exec "${FPATH}" "$args";;
-            [Nn]* ) exit;;
-        esac
-    esac
-}
 
 MIMETYPE="$(file -bL --mime-type -- "${FPATH}")"
 handle_extension
 handle_multimedia "${MIMETYPE}"
 handle_mime "${MIMETYPE}"
-[ "$BIN" -ne 0 ] && [ -x "${FPATH}" ] && handle_bin
 handle_blocked "${MIMETYPE}"
 handle_fallback
 
