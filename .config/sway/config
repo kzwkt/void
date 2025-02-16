@@ -1,50 +1,34 @@
 include /etc/sway/config.d/*
 
 set {
-$mod Mod4
-$mod1 Mod1
+	$mod Mod4
+	$mod1 Mod1
 
-$left h
-$down j
-$up k
-$right l
+	$r_vol exec  pkill -RTMIN+1 i3blocks
+	$r_bl exec pkill -RTMIN+2 i3blocks
+	$r_kb exec pkill -RTMIN+3 i3blocks
 
-$background #282828
-$text #ffffff
-$focus #458588
+	$term foot
+	$browser firefox
+	$editor sublime_text
+	$menu wofi --show drun -I
+	$pctl playerctl.sh
+	$mode_system System:(e) exit,(r) reboot, (o) power-off
 
-$r_vol exec  pkill -RTMIN+1 i3blocks
-$r_bl exec pkill -RTMIN+2 i3blocks
-$r_kb exec pkill -RTMIN+3 i3blocks
-
-$term foot
-$browser firefox
-$editor l3afpad
-$menu wofi --show drun -I
-$pctl playerctld.sh
-$systemctl loginctl
-$mode_system System: (l) lock, (e) exit, (s) suspend, (h) hibernate, (r) reboot, (o) power-off
-
-$ws1 1  Term
-$ws2 2  Webb
-$ws3 3  File
-$ws4 4  Code
-$ws5 5  Medi
-$ws6 6  Grap
-$ws7 7  Othe
+	$ws1 1  Term
+	$ws2 2  Webb
+	$ws3 3  File
+	$ws4 4  Code
+	$ws5 5  Medi
+	$ws6 6  Grap
+	$ws7 7  Othe
 }
-
-##autoruns
-#exec_always  gsettings set org.gnome.desktop.interface  cursor-theme  'rad'
-#exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 
-exec pipewire-launcher
-
 
 #seat seat0 xcursor_theme  rad
 #output *  bg "$wallpaper" fill
-#xwayland disable
-
+xwayland disable
 swaybg_command -
+
 
 default_border pixel 2
 floating_modifier $mod normal
@@ -54,182 +38,173 @@ workspace_auto_back_and_forth yes
 floating_maximum_size 1920 x 1080
 smart_borders on 
 smart_gaps on
-font monospace 12
-
 
 # client.<class> <border> <background> <text> <indicator> <child_border>
 client.focused    #ff0000 #ff0000      #ffffff #4477ff     #ff0000
 
 #wm rules
+
 for_window {
-[app_id=.*] focus ; border csd
-[app_id=dragon-drop] sticky enable ; floating enable
-[app_id= mpv|float|xdm-app] floating enable ; border normal  
-[title = "Picture-in-Picture"] sticky enable ; floating enable;
-[title= "mvi"] floating disable ;
-[shell="xwayland"] title_format "[XWayland] %title"
+	[app_id=.*] focus 
+	[app_id= mpv|float|xdm-app] floating enable 
+	[app_id=org.pwmt.zathura] layout tabbed
+	[title = "Picture-in-Picture"] sticky enable ; floating enable;
+	[title= "mvi"] floating disable ;
+	[shell="xwayland"] title_format "[XWayland] %title"
 }
 
 assign {
-[app_id="foot"]  $ws1
-[app_id="firefox"]  $ws2
-[app_id="nnn"]   $ws3
-[app_id="geany"]  $ws4
-[app_id="mpv-s"]  $ws5
-[app_id=org.pwmt.zathura]  $ws6
-[class=gimp] $ws6
-[app_id=xdm-app] $ws7
+	[app_id="foot"]  $ws1
+	[app_id="$browser"]  $ws2
+	[app_id="fm"]   $ws3
+	[app_id="geany"]  $ws4
+	[app_id="mpv-s"]  $ws5
+	[app_id=org.pwmt.zathura]  $ws6
+	[class=gimp] $ws6
+	[app_id=xdm-app] $ws7
 }
 
 # keyboard bindings
 bindsym --to-code {
-$mod+a focus parent
-$mod+b splith
-$mod+d exec $menu
-$mod+e exec foot -a nnn fm
-$mod+Shift+e exec swaynag -t warning -m 'Bye Bye' -B 'Yes' 'swaymsg exit'
-$mod+f fullscreen
-$mod+i exec $editor ~/.config/sway/config
-$mod+Shift+i exec $editor  ~/.config/i3blocks/config
-$mod+m  exec mounter
-$mod+Shift+m  exec wum
-$mod+q kill
-$mod+Shift+r reload
-$mod+s sticky toggle
-$mod+v splitv
-$mod+w exec $browser
-$mod+x exec tt
-$mod+Escape mode "$mode_system"
-$mod+minus scratchpad show
-$mod+Shift+minus move scratchpad
-$mod+z exec $term
-$mod1+z exec foot -a float
-$mod+slash exec wmoji type
-$mod+Shift+Space floating toggle
-$mod+Space input 1:1:AT_Translated_Set_2_keyboard xkb_switch_layout next ;  $r_kb
+	$mod+a focus parent
+	$mod+b splith
+	$mod+d exec $menu
+	$mod+e exec foot -a fm ~/.bin/fm
+	$mod+f fullscreen
+	$mod+i exec $editor ~/.config/sway/config
+	$mod+p exec wshot
+	$mod+q kill
+	$mod+s sticky toggle
+	$mod+v splitv
+	$mod+w exec $browser
+	$mod+x exec wmoji keys.txt
+	$mod+z exec $term
+	$mod+Shift+b border toggle
+	$mod+Shift+e exec swaynag -t warning -m 'Bye Bye' -B 'Yes' 'swaymsg exit'
+	$mod+Shift+i exec $editor  ~/.config/i3blocks/config
+	$mod+Shift+m  exec wum
+	$mod+Shift+r reload
 
-$mod1+e layout toggle split
-$mod1+s layout stacking
-$mod1+w layout tabbed
-$mod1+Tab workspace next 
+	$mod+Escape mode "$mode_system"
+	$mod+minus scratchpad show
+	$mod+Shift+minus move scratchpad
+	$mod+slash exec wmoji all_emojis.txt
+	$mod+Shift+Space floating toggle
+	$mod+Space input 1:1:AT_Translated_Set_2_keyboard xkb_switch_layout next ;  $r_kb
 
-$mod1+space focus mode_toggle
-$mod+$left focus left
-$mod+$down focus down
-$mod+$up focus up
-$mod+$right focus right
+	$mod+Left focus left
+	$mod+Down focus down
+	$mod+Up focus up
+	$mod+Right focus right
+	$mod+Shift+h move left
+	$mod+Shift+j move down
+	$mod+Shift+k move up
+	$mod+Shift+l move right
+	$mod+Shift+Left move left
+	$mod+Shift+Down move down
+	$mod+Shift+Up move up
+	$mod+Shift+Right move right
 
-$mod+Left focus left
-$mod+Down focus down
-$mod+Up focus up
-$mod+Right focus right
+	$mod+1 workspace $ws1
+	$mod+2 workspace $ws2
+	$mod+3 workspace $ws3
+	$mod+4 workspace $ws4
+	$mod+5 workspace $ws5
+	$mod+6 workspace $ws6
+	$mod+7 workspace $ws7
+	$mod+8 workspace number 8
+	$mod+9 workspace number 9
+	$mod+0 workspace number 10
+	$mod+Shift+1 move container to workspace  $ws1
+	$mod+Shift+2 move container to workspace  $ws2
+	$mod+Shift+3 move container to workspace  $ws3
+	$mod+Shift+4 move container to workspace  $ws4
+	$mod+Shift+6 move container to workspace  $ws6
+	$mod+Shift+7 move container to workspace  $ws7
+	$mod+Shift+8 move container to workspace number 8
+	$mod+Shift+9 move container to workspace number 9
+	$mod+Shift+0 move container to workspace number 10
 
-$mod+Shift+$left move left
-$mod+Shift+$down move down
-$mod+Shift+$up move up
-$mod+Shift+$right move right
+	$mod1+e layout toggle split
+	$mod1+s layout stacking
+	$mod1+w layout tabbed
+	$mod1+z exec foot -a float
+	$mod1+period exec $pctl next
+	$mod1+comma exec $pctl previous
+	$mod1+slash $pctl play-pause
 
-$mod+Shift+Left move left
-$mod+Shift+Down move down
-$mod+Shift+Up move up
-$mod+Shift+Right move right
+	$mod1+Tab workspace next 
+	$mod1+space focus mode_toggle
+	$mod+h focus left
+	$mod+j focus down
+	$mod+k focus up
+	$mod+l focus right
+	mod1+h resize shrink width 10px
+	$mod1+j resize grow height 10px
+	$mod1+k resize shrink height 10px
+	$mod1+l resize grow width 10px
+	$mod1+Left resize shrink width 10px
+	$mod1+Down resize grow height 10px
+	$mod1+Up resize shrink height 10px
+	$mod1+Right resize grow width 10px
 
-mod1+$left resize shrink width 10px
-$mod1+$down resize grow height 10px
-$mod1+$up resize shrink height 10px
-$mod1+$right resize grow width 10px
+	XF86AudioRaiseVolume exec amixer sset Master 2%+ && $r_vol
+	XF86AudioLowerVolume exec amixer sset Master 2%- && $r_vol
+	XF86AudioMute exec amixer sset Master toggle  && $r_vol
 
-$mod1+Left resize shrink width 10px
-$mod1+Down resize grow height 10px
-$mod1+Up resize shrink height 10px
-$mod1+Right resize grow width 10px
+	Control+XF86AudioMute exec amixer -q sset Capture toggle
+	Control+XF86AudioRaiseVolume exec amixer -q sset Capture 5%+
+	Control+XF86AudioLowerVolume exec amixer -q sset Capture 5%-
+		
+	XF86MonBrightnessDown exec  brightnessctl -e set 5%- ; $r_bl 
+	XF86MonBrightnessUp exec   brightnessctl -e set 5%+ ; $r_bl
 
-$mod+1 workspace $ws1 
-$mod+2 workspace $ws2 
-$mod+3 workspace $ws3
-$mod+4 workspace $ws4
-$mod+5 workspace $ws5
-$mod+6 workspace $ws6
-$mod+7 workspace $ws7
-$mod+8 workspace number 8
-$mod+9 workspace number 9
-$mod+0 workspace number 10
-
-$mod+Shift+1 move container to workspace  $ws1
-$mod+Shift+2 move container to workspace  $ws2
-$mod+Shift+3 move container to workspace  $ws3
-$mod+Shift+4 move container to workspace  $ws4
-$mod+Shift+6 move container to workspace  $ws6
-$mod+Shift+7 move container to workspace  $ws7
-$mod+Shift+8 move container to workspace number 8
-$mod+Shift+9 move container to workspace number 9
-$mod+Shift+0 move container to workspace number 10
-
-XF86AudioRaiseVolume exec amixer sset Master 2%+ && $r_vol
-XF86AudioLowerVolume exec amixer sset Master 2%- && $r_vol
-XF86AudioMute exec amixer sset Master toggle  && $r_vol
-
-Control+XF86AudioMute exec amixer -q sset Capture toggle
-Control+XF86AudioRaiseVolume exec amixer -q sset Capture 5%+
-Control+XF86AudioLowerVolume exec amixer -q sset Capture 5%-
-
-XF86MonBrightnessDown exec  brightnessctl -e set 5%- ; $r_bl 
-XF86MonBrightnessUp exec   brightnessctl -e set 5%+ ; $r_bl
-
-XF86AudioPlay exec $pctl play-pause
-$mod1+period exec $pctl next
-$mod1+comma exec $pctl previous
-$mod1+slash exec $pctl play-pause
-$mod+p exec wshot
-$mod+c exec prin
-XF86PowerOff output eDP-1 dpms toggle
+	XF86AudioPlay exec $pctl play-pause
+	XF86PowerOff output eDP-1 dpms toggle
 }
 
 # Resize floating windows with mouse scroll:
-bindgesture swipe:3:up floating toggle
-bindgesture swipe:3:down  kill
-bindgesture swipe:3:left  move scratchpad
-bindgesture swipe:3:right  scratchpad show
-bindgesture hold:3 exec $menubindsym --whole-window --border {
-$mod+button4 resize shrink height 5 px or 5 ppt
-$mod+button5 resize grow height 5 px or 5 ppt
-$mod+button6 resize shrink width 5 px or 5 ppt
-$mod+button7 resize grow width 5 px or 5 ppt
+bindsym --whole-window --border {
+	$mod+button4 resize shrink height 5 px or 5 ppt
+	$mod+button5 resize grow height 5 px or 5 ppt
+	$mod+button6 resize shrink width 5 px or 5 ppt
+	$mod+button7 resize grow width 5 px or 5 ppt
 } 
 
 bindgesture {
-swipe:3:up floating toggle
-swipe:3:down  kill
-swipe:3:left  move scratchpad
-swipe:3:right  scratchpad show
-hold:3 exec $menu
-}
+	 swipe:3:up floating toggle
+	 swipe:3:down  kill
+	 swipe:3:left  move scratchpad
+	 swipe:3:right  scratchpad show
+	 hold:3 exec $menu
+ }
 
 mode "$mode_system" {
-bindsym l exec swaylock, mode "default"
-bindsym e exit , mode "default"
-bindsym s exec swaylock && $systemctl suspend , mode "default"
-bindsym h exec swaylock && $systemctl hibernate, mode "default"
-bindsym r exec $systemctl reboot , mode "default"
-bindsym o exec $systemctl poweroff , mode "default"
-bindsym Escape mode "default"
+	bindsym e exit , mode "default"
+	bindsym r exec doas reboot , mode "default"
+	bindsym o exec doas poweroff , mode "default"
+	bindsym Escape mode "default"
 }
 
 input type:touchpad {
-dwt enabled
-tap enabled
-middle_emulation enabled
-pointer_accel 1
+	dwt enabled
+	tap enabled
+	middle_emulation enabled
+	pointer_accel 1
 }
 
 input 1:1:AT_Translated_Set_2_keyboard  {
-xkb_layout "us,np"
-xkb_numlock enable
-xkb_options caps:backspace
+	xkb_layout "us,np"
+	xkb_options caps:backspace
 }
 
 bar {
-position top
-status_command i3blocks
+	position top
+	#mode hide
+	status_command i3blocks
+	#status_command ~/.config/sway/status.sh
 }
 
+##autoruns
+#exec_always  gsettings set org.gnome.desktop.interface  cursor-theme  'rad'
+#exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 
