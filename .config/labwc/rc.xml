@@ -7,8 +7,8 @@
 <default />
 <keybind key="W-d"> <action name="Execute" command="wofi --show drun -I"/> </keybind>
 <keybind key="W-e"> <action name="Execute" command="foot fm"/>  </keybind>
-<keybind key="W-i"> <action name="Execute" command="foot nano  /home/k/.config/labwc/rc.xml"/>  </keybind>
-<keybind key="W-s-i"> <action name="Execute" command="foot nano  /home/k/.config/yabar/config.yml"/>  </keybind>
+<keybind key="W-i"> <action name="Execute" command="sublime_text  /home/k/.config/labwc/rc.xml"/>  </keybind>
+<keybind key="W-S-i"> <action name="Execute" command="sublime_text /home/k/.config/yambar/config.yml"/>  </keybind>
 <keybind key="W-q"> <action name="Close"/> </keybind>
 <keybind key="W-S-r"> <action name="Reconfigure"/> </keybind>
 <keybind key="W-z"> <action name="Execute" command="foot"/> </keybind>
