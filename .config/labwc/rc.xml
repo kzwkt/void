@@ -28,6 +28,13 @@
 <keybind key="XF86_MonBrightnessUp"> <action name="Execute" command="light -A 2%"/> </keybind>
 <keybind key="XF86_MonBrightnessDown"> <action name="Execute" command="light -U 2%"/> </keybind>
 <keybind key="XF86AudioPlay"> <action name="Execute" command="playerctl.sh play-pause"/> </keybind>
+
+<keybind key="F2">  <action name="Execute" command="amixer sset Master 5%-"/> </keybind>
+<keybind key="F3"> <action name="Execute" command="amixer sset Master 5%+"/> </keybind>
+<keybind key="F1"> <action name="Execute" command="amixer sset Master toggle"/> </keybind>
+<keybind key="F6">  <action name="Execute" command="brightnessctl s -e  5%-"/> </keybind>
+<keybind key="F7"> <action name="Execute" command="brightnessctl s -e  5%+"/> </keybind>
+
 </keyboard>
 
 <mouse>
