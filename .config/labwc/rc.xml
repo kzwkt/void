@@ -1,17 +1,28 @@
 <?xml version="1.0"?>
-
 <labwc_config>
-<desktops number="4" />
+	
+<theme>
+<name>xp</name>
+ <icon>luna</icon>
+ <cornerRadius>8</cornerRadius>
+ <keepBorder>no</keepBorder>
+ <dropShadows>yes</dropShadows>
+</theme>
 
-<keyboard>
-<default />
-<keybind key="W-d"> <action name="Execute" command="wofi --show drun -I"/> </keybind>
-<keybind key="W-e"> <action name="Execute" command="foot fm"/>  </keybind>
-<keybind key="W-i"> <action name="Execute" command="sublime_text  /home/k/.config/labwc/rc.xml"/>  </keybind>
-<keybind key="W-S-i"> <action name="Execute" command="sublime_text /home/k/.config/yambar/config.yml"/>  </keybind>
-<keybind key="W-q"> <action name="Close"/> </keybind>
-<keybind key="W-S-r"> <action name="Reconfigure"/> </keybind>
-<keybind key="W-z"> <action name="Execute" command="foot"/> </keybind>
+<desktops number="4" />
+	<keyboard>
+	<default />
+	<keybind key="Super_L" onRelease="yes"><action name="Execute" command="start"/></keybind>
+	<keybind key="W-e"><action name="Execute" command="foot fm"/></keybind>
+	<keybind key="W-i"><action name="Execute" command="sublime_text ~/.config/labwc/rc.xml"/></keybind>
+	<keybind key="W-S-i"><action name="Execute" command="sublime_text ~/.config/sfwbar/sfwbar.config"/></keybind>
+	<keybind key="W-q"><action name="Close"/></keybind>
+	<keybind key="W-S-r"><action name="Reconfigure"/></keybind>
+	<keybind key="W-w"><action name="Execute" command="apulse ~/opt/firefox/firefox"/></keybind>
+	<keybind key="W-z"><action name="Execute" command="foot"/></keybind>
+
+	<keybind key="W-d"><action name="ForEach"><query desktop="current" /><then><action name="Iconify"/></then></action></keybind>
+
 <keybind key="W-1">  <action name="GoToDesktop"> <to>1</to> </action>  </keybind>
 <keybind key="W-2"> <action name="GoToDesktop">  <to>2</to> </action> </keybind>
 <keybind key="W-3"> <action name="GoToDesktop">  <to>3</to>  </action> </keybind>
@@ -20,30 +31,29 @@
 <keybind key="W-S-at"> <action name="SendToDesktop">  <to>2</to> </action> </keybind>
 <keybind key="W-S-numbersign"> <action name="SendToDesktop">  <to>3</to> </action> </keybind>
 <keybind key="W-S-dollar"> <action name="SendToDesktop">  <to>4</to> </action> </keybind>
-<keybind key="A-Space"> <action name="ShowMenu" menu="client-menu"/> </keybind>
+	
+<keybind key="F2">  <action name="Execute" command="c.sh vup"/> </keybind>
+<keybind key="F3"> <action name="Execute" command="c.sh vdown"/> </keybind>
+<keybind key="F1"> <action name="Execute" command="c.sh vmute"/> </keybind>
+<keybind key="F6">  <action name="Execute" command="c.sh bup"/> </keybind>
+<keybind key="F7"> <action name="Execute" command="c.sh bdown"/> </keybind>
+<keybind key="XF86AudioRaiseVolume">  <action name="Execute" command="c.sh vup"/> </keybind>
+<keybind key="XF86AudioLowerVolume"> <action name="Execute" command="c.sh vdown"/> </keybind>
+<keybind key="XF86AudioMute"> <action name="Execute" command="c.sh vmute"/> </keybind>
+<keybind key="XF86MonBrightnessUp">  <action name="Execute" command="c.sh bup"/> </keybind>
+<keybind key="XF86MonBrightnessDown"> <action name="Execute" command="c.sh bdown"/> </keybind>
 
-<keybind key="XF86_AudioLowerVolume">  <action name="Execute" command="amixer sset Master 5%-"/> </keybind>
-<keybind key="XF86_AudioRaiseVolume"> <action name="Execute" command="amixer sset Master 5%+"/> </keybind>
-<keybind key="XF86_AudioMute"> <action name="Execute" command="amixer sset Master toggle"/> </keybind>
-<keybind key="XF86_MonBrightnessUp"> <action name="Execute" command="light -A 2%"/> </keybind>
-<keybind key="XF86_MonBrightnessDown"> <action name="Execute" command="light -U 2%"/> </keybind>
-<keybind key="XF86AudioPlay"> <action name="Execute" command="playerctl.sh play-pause"/> </keybind>
+	</keyboard>
 
-<keybind key="F2">  <action name="Execute" command="amixer sset Master 5%-"/> </keybind>
-<keybind key="F3"> <action name="Execute" command="amixer sset Master 5%+"/> </keybind>
-<keybind key="F1"> <action name="Execute" command="amixer sset Master toggle"/> </keybind>
-<keybind key="F6">  <action name="Execute" command="brightnessctl s -e  5%-"/> </keybind>
-<keybind key="F7"> <action name="Execute" command="brightnessctl s -e  5%+"/> </keybind>
+	<mouse>
+	<default />
 
-</keyboard>
+	</mouse>
+     
+<windowRules>
+	<windowRule title="Picture in picture">
+		<action name="ToggleAlwaysOnTop" />
+	</windowRule>
+</windowRules>
 
-<mouse>
-<default />
-</mouse>
-
-<libinput>
-<device category="">
-<tap>yes</tap>
-</device>
-</libinput>
 </labwc_config>
