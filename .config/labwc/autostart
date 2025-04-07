@@ -1,5 +1,8 @@
-# Example autostart file
+# autostart file
 
-#yambar >/dev/null 2>&1 &
+swaybg -i ~/src/bliss.jpg  >/dev/null 2>&1 &
+sfwbar  >/dev/null 2>&1 &
+
+aplay  ~/.local/share/sounds/xp/stereo/desktop-login.wav   >/dev/null 2>&1 &
 
 #mako >/dev/null 2>&1 &
