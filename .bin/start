@@ -1,0 +1,12 @@
+#!/bin/sh
+
+pgrep -x "wofi" && pkill -x "wofi" && exit
+
+w=300	
+h=520
+x=0
+y=500
+y=$((1080 - $h - 32))
+
+wofi --show drun --width $w --height $h --xoffset 0 --yoffset $y --insensitive --allow-images 
+
